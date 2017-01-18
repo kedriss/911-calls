@@ -41,17 +41,24 @@ db.calls.aggregate([
 
 ## Nombre d'appel autour de Lanslade
 ```javascript
-db.calls.find( { loc :{ $geoWithin :{ $centerSphere:[ [ -75.283783, 40.241493 ] , 0.310686 / 3963.2 ]}}}).count()
+db.calls.find( {loc :{ $geoWithin :{ $centerSphere:[ [ -75.283783, 40.241493 ] , 0.310686 / 3963.2 ]}}}).count()
 ```
 
 ## Les 3 mois avec le plus d'appel
 ```javascript
-db.calls.aggregate([ { $group: { _id : {month: {$month: "$timestamp"}, year: {$year: "$timestamp"}}, total: {$sum: 1}}}, { $sort: {total:-1}}, {$limit: 3} ])
+db.calls.aggregate([
+    { $group: { _id : {month: {$month: "$timestamp"}, year: {$year: "$timestamp"}}, total: {$sum: 1}}},
+    { $sort: {total:-1}}, {$limit: 3}
+])
 ```
 
 ## Top 3 des villes avec le plus d'overdose
 ```javascript
-db.calls.aggregate([ { $match:{title: {$regex : ".*OVERDOSE.*"}}},{ $group: { _id : "$city", total: {$sum: 1}}}, {$sort: {total:-1}}, {$limit:3}])
+db.calls.aggregate([
+    { $match:{title: {$regex : ".*OVERDOSE.*"}}},
+    { $group: { _id : "$city", total: {$sum: 1}}},
+    {$sort: {total:-1}}, {$limit:3}
+])
 ```
 
 Vous allez sûrement avoir besoin de vous inspirer des points suivants de la documentation :
