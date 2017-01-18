@@ -50,6 +50,7 @@ const insertCalls = function (db, callback) {
                 },
                 description: data.desc,
                 zipCode: data.zip,
+                city: data.desc.split(';')[1].trim(),
                 category: findCallCategory(data.title),
                 title: data.title,
                 timestamp: new Date(data.timeStamp),
