@@ -1,0 +1,44 @@
+
+GET calls/data/_search
+{
+  "size":1, 
+  "aggs": {
+    "CallType": {
+      "terms": {
+        "field": "type.keyword"
+      }
+          }
+  }
+}
+
+GET calls/data/_search
+{
+ "size": 0, 
+  "aggs": {
+    "CallType": {
+      "terms": {
+        "field": "month.keyword",
+        "size": 3
+        
+      }
+      }
+  }
+}
+
+GET calls/data/_search
+{ "query": {"match": {
+  "title":"overdose"
+}}, 
+  "size": 0,
+  
+  "aggs": {
+    "CallType": {
+      "terms": {
+        "field": "twp.keyword",
+        "size": 3
+        
+      }
+      }
+  }
+  
+}
