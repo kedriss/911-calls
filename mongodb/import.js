@@ -52,7 +52,7 @@ const insertCalls = function (db, callback) {
                 zipCode: data.zip,
                 category: findCallCategory(data.title),
                 title: data.title,
-                timestamp: data.timeStamp,
+                timestamp: new Date(data.timeStamp),
                 area: data.twp,
                 address: data.addr
             };
