@@ -23,6 +23,15 @@ const findCallCategory = (title) => {
     }
 };
 
+const getBoundedCoordinate = coord => {
+    let bounded = coord;
+
+    if (bounded > 90) bounded = 90;
+    if (bounded < -90) bounded = -90;
+
+    return bounded;
+};
+
 const insertCalls = function (db, callback) {
     const collection = db.collection('calls');
 
@@ -30,9 +39,15 @@ const insertCalls = function (db, callback) {
     fs.createReadStream('../911.csv')
         .pipe(csv())
         .on('data', data => {
+
+            const latitude = getBoundedCoordinate(parseFloat(data.lat));
+            const longitude = getBoundedCoordinate(parseFloat(data.lng));
+
             const call = {
-                latitude: parseInt(data.lat),
-                longitude: parseInt(data.lng),
+                location: {
+                    type: "Point",
+                    coordinates: [latitude, longitude]
+                },
                 description: data.desc,
                 zipCode: data.zip,
                 category: findCallCategory(data.title),
@@ -41,10 +56,12 @@ const insertCalls = function (db, callback) {
                 area: data.twp,
                 address: data.addr
             };
+
             calls.push(call);
         })
         .on('end', () => {
             collection.insertMany(calls, (err, result) => {
+                collection.createIndex({loc: "2dsphere"});
                 callback(result)
             });
         });
